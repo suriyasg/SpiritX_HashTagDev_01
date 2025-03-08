@@ -6,7 +6,7 @@ export const toastError = (message: string) => {
     style: {
       border: "1px solid #ff4d4f",
       borderRadius: "10px",
-      background: "#333",
+      background: "#fff",
       color: "#000",
     },
   });
@@ -18,7 +18,7 @@ export const toastSuccess = (message: string) => {
     style: {
       border: "1px solid #00c48c",
       borderRadius: "10px",
-      background: "#333",
+      background: "#fff",
       color: "#000",
     },
   });
