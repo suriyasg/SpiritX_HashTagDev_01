@@ -1,26 +1,24 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { useRouter } from "next/navigation";
 import axios from "axios";
+import { toastSuccess } from "../utils/notify";
 export interface User {
   id: string;
   username: string;
 }
 export interface AuthState {
-  router: ReturnType<typeof useRouter>;
   authUser: User | null;
   isSigningUp: boolean;
   isLoggingIn: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
-  nameCheck: (username: string) => Promise<void>;
+  nameCheck: (username: string) => Promise<boolean>;
   signup: (username: string, password: string) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set, get) => ({
-      router: useRouter(),
+    (set) => ({
       authUser: null,
       isSigningUp: false,
       isLoggingIn: false,
@@ -31,8 +29,9 @@ export const useAuthStore = create<AuthState>()(
             username,
             password,
           });
-          console.log("Login Success: ", response.data);
-          set({ authUser: response.data, isLoggingIn: false });
+          toastSuccess("Login Success");
+          console.log(response.data);
+          set({ authUser: response.data.user, isLoggingIn: false });
         } catch (error) {
           console.error("Login Error: ", error);
           set({ isLoggingIn: false });
@@ -40,8 +39,10 @@ export const useAuthStore = create<AuthState>()(
       },
       logout: () => {
         axios.post("/api/auth/logout");
+        localStorage.clear();
         set({ authUser: null });
-        get().router.push("/auth/login");
+        toastSuccess("Logout Success");
+        window.location.href = "/auth/login";
       },
       signup: async (username: string, password: string) => {
         set({ isSigningUp: true });
@@ -51,7 +52,8 @@ export const useAuthStore = create<AuthState>()(
             password,
           });
           console.log("Signup Success: ", response.data);
-          set({ authUser: response.data, isSigningUp: false });
+          toastSuccess("Signup Success");
+          set({ authUser: response.data.user, isSigningUp: false });
         } catch (error) {
           console.error("Signup Error: ", error);
           set({ isSigningUp: false });
