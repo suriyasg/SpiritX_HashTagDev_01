@@ -1,7 +1,7 @@
 import { PoolConnection, RowDataPacket } from "mysql2/promise";
 import { NextRequest, NextResponse } from "next/server";
 
-import { pool } from "../../../../../db";
+import { pool } from "../../../../../lib/db";
 import bcrypt from 'bcrypt';
 import { userinputdata } from "../signup/route";
 import jwt from 'jsonwebtoken';
@@ -30,8 +30,8 @@ async function signinUser(username:string,password:string) {
             const user = rows[0] as useroutput;
             const isPasswordValid = await bcrypt.compare(password, user.hashedpassword);
             if (isPasswordValid) {
-
-                const token = jwt.sign({ username: user.username }, 'your_secret_key', { expiresIn: '1h' });
+                const secret = process.env.SECRET_KEY as string;
+                const token = jwt.sign({ username: user.username }, secret, { expiresIn: '1h' });
                 const response = NextResponse.json({ message: 'User signed in successfully', data: null } as signinresponse, { status: 200 });
                 response.cookies.set('token', token, { httpOnly: true, secure: false, sameSite: 'strict', maxAge: 3600 });
 

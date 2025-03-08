@@ -14,7 +14,8 @@ export async function middleware(request: NextRequest) {
 
 if (token) {
     try {
-        const decoded = jwt.verify(token, SECRET_KEY);
+        const secret = process.env.SECRET_KEY as string;
+        const decoded = jwt.verify(token, secret);
 
         if (decoded) {
             return NextResponse.redirect(new URL("/dashboard", request.url));
