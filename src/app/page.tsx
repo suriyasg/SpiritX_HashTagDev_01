@@ -1,3 +1,11 @@
+"use client";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 export default function Home() {
-  return <>Welcome</>;
+  const router = useRouter();
+  useEffect(() => {
+    router.push("/auth/login");
+  }, []);
+  return null;
 }
