@@ -15,6 +15,7 @@ export async function middleware(request: NextRequest) {
 if (token) {
     try {
         const secret = process.env.SECRET_KEY as string;
+        console.log(secret,"null")
         const decoded = jwt.verify(token, secret);
 
         if (decoded) {
