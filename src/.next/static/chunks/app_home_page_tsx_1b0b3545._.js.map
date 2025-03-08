@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file://C%3A/Users/User/Desktop/Spritx/SpiritX_HashTagDev_01/src/app/home/page.tsx"],"sourcesContent":["\"use client\";\r\nimport { motion } from \"framer-motion\";\r\n\r\nexport default function Home() {\r\n  return (\r\n    <div className=\"flex items-center justify-center min-h-screen bg-gray-900 text-white\">\r\n      <motion.div \r\n        className=\"text-center\"\r\n        initial={{ opacity: 0, y: 20 }}\r\n        animate={{ opacity: 1, y: 0 }}\r\n        transition={{ duration: 0.5 }}\r\n      >\r\n        <h1 className=\"text-4xl font-bold\">Welcome to the Home Page!</h1>\r\n        <p className=\"text-lg mt-3\">You have successfully logged in.</p>\r\n      </motion.div>\r\n    </div>\r\n  );\r\n}\r\n"],"names":[],"mappings":";;;;AACA;AADA;;;AAGe,SAAS;IACtB,qBACE,6LAAC;QAAI,WAAU;kBACb,cAAA,6LAAC,6LAAA,CAAA,SAAM,CAAC,GAAG;YACT,WAAU;YACV,SAAS;gBAAE,SAAS;gBAAG,GAAG;YAAG;YAC7B,SAAS;gBAAE,SAAS;gBAAG,GAAG;YAAE;YAC5B,YAAY;gBAAE,UAAU;YAAI;;8BAE5B,6LAAC;oBAAG,WAAU;8BAAqB;;;;;;8BACnC,6LAAC;oBAAE,WAAU;8BAAe;;;;;;;;;;;;;;;;;AAIpC;KAdwB","debugId":null}},
+    {"offset": {"line": 66, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"A"}}]
+}
