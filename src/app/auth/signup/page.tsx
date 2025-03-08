@@ -95,7 +95,10 @@ export default function Signup() {
               setUsername(e.target.value);
               if (e.target.value.length >= 8) {
                 const response = await nameCheck(e.target.value);
+                console.log("Name Check Response: ", response);
                 setErrors((prev) => ({ ...prev, username: response ? "Username already exists" : validateUsername(e.target.value) }));
+              } else {
+                setErrors((prev) => ({ ...prev, username: validateUsername(e.target.value) }));
               }
             }}
           />

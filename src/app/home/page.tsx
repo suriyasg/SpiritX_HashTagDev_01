@@ -12,11 +12,7 @@ export default function Home() {
     router.push("/auth/login");
   };
 
-  // useEffect(() => {
-  //   if (!authUser) {
-  //     router.push("/auth/login");
-  //   }
-  // }, [authUser, router]);
+
 
   return (
     <>
@@ -28,7 +24,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-4xl font-bold">Welcome to the Home Page!</h1>
+            <h1 className="text-4xl font-bold">Welcome {authUser?.username}!</h1>
             <p className="text-lg mt-3">You have successfully logged in.</p>
             <button
               onClick={handleLogout}
