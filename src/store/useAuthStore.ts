@@ -1,24 +1,26 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-
+import { useRouter } from "next/navigation";
 import axios from "axios";
 export interface User {
   id: string;
   username: string;
 }
 export interface AuthState {
+  router: ReturnType<typeof useRouter>;
   authUser: User | null;
   isSigningUp: boolean;
   isLoggingIn: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
-  checkAuth: () => Promise<void>;
+  nameCheck: (username: string) => Promise<void>;
   signup: (username: string, password: string) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
+      router: useRouter(),
       authUser: null,
       isSigningUp: false,
       isLoggingIn: false,
@@ -39,6 +41,7 @@ export const useAuthStore = create<AuthState>()(
       logout: () => {
         axios.post("/api/auth/logout");
         set({ authUser: null });
+        get().router.push("/auth/login");
       },
       signup: async (username: string, password: string) => {
         set({ isSigningUp: true });
@@ -54,12 +57,14 @@ export const useAuthStore = create<AuthState>()(
           set({ isSigningUp: false });
         }
       },
-      checkAuth: async () => {
+      nameCheck: async (username: string) => {
         try {
-          const response = await axios.get("/api/auth/check");
-          set({ authUser: response.data });
+          const response = await axios.post(`/api/auth/namecheck`, {
+            username,
+          });
+          return response.data;
         } catch (error) {
-          console.error("Check Auth Error: ", error);
+          console.error("Check Name Error: ", error);
         }
       },
     }),
