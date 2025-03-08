@@ -1,12 +1,14 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react";
 import signupImage from "../../../public/signup.jpg"; // your signup image
+import { useAuthStore } from "@/src/store/useAuthStore";
 
 export default function Signup() {
+  const { signup, authUser, isSigningUp, nameCheck } = useAuthStore();
   const router = useRouter();
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -19,6 +21,11 @@ export default function Signup() {
     confirmPassword: "",
   });
 
+  useEffect(() => {
+    if (authUser && authUser.username) {
+      router.push("/home");
+    }
+  });
   const validateUsername = (value: string): string => {
     if (value.length < 8) {
       return "Username must be at least 8 characters long";
@@ -52,8 +59,13 @@ export default function Signup() {
       confirmPassword: confirmPasswordError,
     });
 
-    if (!usernameError && !passwordError && !confirmPasswordError) {
-      router.push("/home");
+    if (usernameError || passwordError || confirmPasswordError) {
+      return;
+    }
+    try {
+      signup(username, password);
+    } catch (error) {
+      console.error("Signup Error: ", error);
     }
   };
 
@@ -67,7 +79,12 @@ export default function Signup() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Image src={signupImage} alt="Signup" className="w-60 h-60 object-cover" /> {/* Adjust image size */}
+          <Image
+            src={signupImage}
+            alt="Signup"
+            className="w-60 h-60 object-cover"
+          />{" "}
+          {/* Adjust image size */}
         </motion.div>
 
         {/* Right side for the input fields */}
@@ -93,12 +110,29 @@ export default function Signup() {
             placeholder="Username"
             className="w-full p-4 border rounded-lg mb-6 text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-300"
             value={username}
-            onChange={(e) => {
+            onChange={async (e) => {
               setUsername(e.target.value);
-              setErrors((prev) => ({ ...prev, username: validateUsername(e.target.value) }));
+              if (e.target.value.length >= 8) {
+                // Check if username is at least 8 characters long
+
+                const response = await nameCheck(e.target.value);
+                if (response) {
+                  // If username exists, show error
+                  setErrors((prev) => ({
+                    ...prev,
+                    username: "Username already exists",
+                  }));
+                }
+              }
+              setErrors((prev) => ({
+                ...prev,
+                username: validateUsername(e.target.value),
+              }));
             }}
           />
-          {errors.username && <p className="text-red-500 text-sm mb-2">{errors.username}</p>}
+          {errors.username && (
+            <p className="text-red-500 text-sm mb-2">{errors.username}</p>
+          )}
 
           {/* Password input */}
           <div className="relative w-full mb-6">
@@ -109,7 +143,10 @@ export default function Signup() {
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
-                setErrors((prev) => ({ ...prev, password: validatePassword(e.target.value) }));
+                setErrors((prev) => ({
+                  ...prev,
+                  password: validatePassword(e.target.value),
+                }));
               }}
             />
             <button
@@ -119,7 +156,9 @@ export default function Signup() {
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
-          {errors.password && <p className="text-red-500 text-sm mb-2">{errors.password}</p>}
+          {errors.password && (
+            <p className="text-red-500 text-sm mb-2">{errors.password}</p>
+          )}
 
           {/* Confirm Password input */}
           <div className="relative w-full mb-6">
@@ -130,7 +169,10 @@ export default function Signup() {
               value={confirmPassword}
               onChange={(e) => {
                 setConfirmPassword(e.target.value);
-                setErrors((prev) => ({ ...prev, confirmPassword: validateConfirmPassword(e.target.value) }));
+                setErrors((prev) => ({
+                  ...prev,
+                  confirmPassword: validateConfirmPassword(e.target.value),
+                }));
               }}
             />
             <button
@@ -140,14 +182,23 @@ export default function Signup() {
               {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
-          {errors.confirmPassword && <p className="text-red-500 text-sm mb-2">{errors.confirmPassword}</p>}
+          {errors.confirmPassword && (
+            <p className="text-red-500 text-sm mb-2">
+              {errors.confirmPassword}
+            </p>
+          )}
 
           {/* Sign Up button */}
           <button
-            className="w-full bg-green-500 text-white py-4 rounded-lg hover:bg-green-600 transition-transform transform hover:scale-105 mt-4"
+            className={`w-full text-white py-4 rounded-lg transition-transform transform hover:scale-105 mt-4 ${
+              isSigningUp
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-green-500 hover:bg-green-600"
+            }`}
             onClick={handleSignup}
+            disabled={isSigningUp}
           >
-            Sign Up
+            {isSigningUp ? "Signing Up..." : "Sign Up"}
           </button>
 
           {/* Login link */}
