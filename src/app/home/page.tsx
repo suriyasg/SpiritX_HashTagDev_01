@@ -19,7 +19,7 @@ export default function Home() {
     }
   }, [authUser, router]);
 
-  return (
+  return authUser ? (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-black via-gray-900 to-blue-900 text-white">
       <motion.div
         className="text-center backdrop-blur-lg bg-white/80 p-10 rounded-2xl shadow-2xl border border-gray-300 text-gray-900"
@@ -47,5 +47,5 @@ export default function Home() {
         </motion.button>
       </motion.div>
     </div>
-  );
+  ) : null;
 }
