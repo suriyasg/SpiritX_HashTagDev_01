@@ -21,6 +21,7 @@ export default function Login() {
       router.push("/home");
     }
   });
+
   const handleLogin = () => {
     if (!email || !password) {
       toastError("Fill all Fields");
@@ -34,41 +35,36 @@ export default function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-900">
-      <div className="flex w-[800px] bg-white shadow-lg rounded-2xl overflow-hidden p-8">
-        {/* Left side for the image */}
+    <div className="flex items-center justify-center min-h-screen bg-gray-900 px-4">
+      <div className="flex flex-col md:flex-row w-full max-w-3xl bg-white shadow-lg rounded-2xl overflow-hidden p-8">
+        
+        {/* Left Side - Image (Hidden on small screens) */}
         <motion.div
-          className="w-1/2 flex justify-center items-center"
+          className="hidden md:flex w-1/2 justify-center items-center"
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Image
-            src={loginImage}
-            alt="Login"
-            className="w-60 h-60 object-cover"
-          />{" "}
-          {/* Increased image size */}
+          <Image src={loginImage} alt="Login" className="w-60 h-60 object-cover" />
         </motion.div>
 
-        {/* Right side for the input fields */}
+        {/* Right Side - Form */}
         <motion.div
-          className="w-1/2 flex flex-col justify-center px-8"
+          className="w-full md:w-1/2 flex flex-col justify-center px-4 md:px-8"
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          {/* Login heading */}
-          <motion.div
-            className="text-blue-500 text-3xl font-semibold mb-6" // Updated to blue text
+          <motion.h2
+            className="text-blue-500 text-3xl font-semibold mb-6 text-center md:text-left"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
             Login
-          </motion.div>
+          </motion.h2>
 
-          {/* Username input */}
+          {/* Email input */}
           <input
             type="text"
             placeholder="Enter your username"
@@ -94,7 +90,7 @@ export default function Login() {
             </button>
           </div>
 
-          {/* Login button */}
+          {/* Login Button */}
           <button
             className={`w-full bg-blue-500 text-white py-4 rounded-lg transition-transform transform mt-4 ${
               isLoggingIn
@@ -107,7 +103,7 @@ export default function Login() {
             {isLoggingIn ? "Logging in..." : "Login"}
           </button>
 
-          {/* Sign-up link */}
+          {/* Signup Link */}
           <p className="text-center mt-6 text-gray-500">
             New user?{" "}
             <span
